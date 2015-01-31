@@ -7,8 +7,8 @@ $(document).ready(function(){
 	$menuNavegacion   = $contenedor.find('.menu-navegacion');
 	$menuBoton        = $contenedor.find('.menu-boton');
 	$paginaContenedor = $contenedor.find('.pagina-contenedor');
-	menuEstado = 'abierto';
-	dimensiones = {
+	menuEstado        = 'abierto';
+	dimensiones       = {
 		pantallaGrande: [1201, -1],
 		pantallaTableta:[768, 1200],
 		pantallaMovil:  [420, 767],
@@ -29,6 +29,22 @@ $(document).ready(function(){
 // Accion del boton de menu segun tamaño de pantalla
 	$menuBoton.click(function(event){
 		botonMenu(dimensionActual());
+	});
+	$menuNavegacion.find('li a').hover(function() {
+		if($menuContenedor.hasClass('menu-cerrado')){
+			$(this).find('span').css({
+				display: 'inline-block',
+				padding: '0px 0 0px 20px'
+			});
+		}
+	}, function() {
+		if($menuContenedor.hasClass('menu-cerrado')){
+			$(this).find('span').css({
+				display: 'none',
+				padding: '0'
+			});
+			$(this).find('li').hasClass('sub-menu');
+		}
 	});
 });
 
@@ -70,11 +86,11 @@ function prepararMenu(){
 	submenu.find('ul').css('height', '0');
 	submenu.click(function(event){
 		event.preventDefault();
-		if($(this).hasClass('abierto')){
+		if($(this).hasClass('abierto') && ($menuContenedor.hasClass('menu-abierto') || $menuContenedor.hasClass('menu-minimizado'))){
 			$(this).removeClass('abierto');
 			TweenMax.to($(this).find('ul'),0.3,{height:0,display:'none'});
 		}
-		else{
+		else if(!$(this).hasClass('abierto') && ($menuContenedor.hasClass('menu-abierto') || $menuContenedor.hasClass('menu-minimizado'))){
 			TweenMax.to(submenu.find('ul'),0.3,{height:0,display:'none'});
 			submenu.removeClass('abierto');
 			$(this).addClass('abierto');
@@ -88,11 +104,17 @@ function cerrarMenu(){
 	TweenMax.to('.menu-navegacion li a span',0.1,{display:'none'});
 	TweenMax.to('.menu-titulo a',0.1,{display:'none'});
 	TweenMax.to('.menu-contenedor',0.2,{width:66,delay:0.1});
+	$menuContenedor.removeClass('menu-abierto');
+	$menuContenedor.addClass('menu-cerrado');
+	$menuNavegacion.find('li').has('ul').removeClass('abierto');
+	TweenMax.to($menuNavegacion.find('li').has('ul').find('ul'),0.3,{height:0,display:'none'});
 }
 function abrirMenu(){
 	TweenMax.to('.menu-contenedor',0.2,{width:240});
 	TweenMax.to('.menu-navegacion li a span',0.1,{display:'inline-block', delay:0.1});
 	TweenMax.to('.menu-titulo a',0.1,{display:'inline-block', delay:0.1});
+	$menuContenedor.removeClass('menu-cerrado');
+	$menuContenedor.addClass('menu-abierto');
 }
 function redimencionar(dimension){
 	$('.menu-contenedor').removeAttr('style');
@@ -109,6 +131,8 @@ function redimencionar(dimension){
 		$('.menu-navegacion li a span').css('display', 'none');
 		$('.menu-titulo a').css('display', 'none');
 		$('.menu-navegacion').css('display', 'block');
+		$menuNavegacion.find('li').has('ul').removeClass('abierto');
+		TweenMax.to($menuNavegacion.find('li').has('ul').find('ul'),0.3,{height:0,display:'none'});
 		menuEstado= 'cerrado';
 	}
 	if(dimension == 'pantallaMovil' || dimension =='pantallachica'){

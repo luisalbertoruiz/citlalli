@@ -113,6 +113,11 @@ body {
 	background: rgba(255, 255, 255, 0.1);
 	color: gainsboro;
 }
+.menu-cerrado .menu-navegacion li a:hover{
+	background:rgba(50, 94, 235, 1);
+	color: gainsboro;
+	width:240px;
+}
 .menu-navegacion li a i{
 	top: 1px;
 	display: inline-block;
@@ -127,10 +132,15 @@ body {
 	border-top: 1px solid rgba(255, 255, 255, 0.3);
 	display: none;
 	overflow: hidden;
-	z-index: 1;
+}
+.menu-navegacion li ul > li{
 }
 .menu-navegacion li ul > li a{
 	padding: 10px 0 10px 30px;
+	background: #2A4DBA;
+	display:flex;
+}
+.menu-cerrado .menu-navegacion li ul > li a:hover{
 	background: #2A4DBA;
 }
 .menu-navegacion li ul > li:last-child{
